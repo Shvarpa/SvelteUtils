@@ -22,10 +22,6 @@
   "keywords": [
     "svelte"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://git@github/shvarpa/ControllerAnimation.git"
-  },
   "private": false,
   "files": [
     "src",
