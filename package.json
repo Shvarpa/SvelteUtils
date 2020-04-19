@@ -3,10 +3,7 @@
   "version": "1.0.0",
   "svelte": "src/index.js",
   "module": "dist/index.mjs",
-  "main": "dist/index.js",
   "scripts": {
-    "build": "rollup -c",
-    "prepare": "yarn build",
     "dev": "concurrently \"rollup -c -w\" \"sirv dist --dev\""
   },
   "devDependencies": {
@@ -25,6 +22,6 @@
   "private": false,
   "files": [
     "src",
-    "dist"
+    "Template"
   ]
 }
