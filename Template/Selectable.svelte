@@ -3,7 +3,9 @@
 	export let id;
 	let isSelected = false;
 	$: isSelected = selected == id;
-	const select = () => {selected = id};
+	const select = () => {
+		selected = id;
+	};
 </script>
 
 <div class="box" class:isSelected on:click="{select}">

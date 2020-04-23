@@ -1,5 +1,9 @@
 import { writable, Writable } from "svelte/store";
 
+interface Value<T> {
+	readonly value: T;
+}
+
 const InnerSymbol = Symbol("inner");
 function inner<K extends Object, T extends Object>(state: K, root: store<T>) {
 	return new Proxy(state, {
@@ -27,13 +31,14 @@ function inner<K extends Object, T extends Object>(state: K, root: store<T>) {
 	});
 }
 
-export class store<T extends Object> implements Writable<T> {
+export class store<T extends Object> implements Writable<T>, Value<T> {
 	private state: T;
 	private store: Writable<T>;
-
+	readonly value: T;
 	constructor(state: T) {
 		this.state = state;
 		this.store = writable(state);
+		this.value = state;
 		return new Proxy(this, {
 			set: (object, key, value, proxy) => {
 				// if(typeof value == "object" && !value[InnerSymbol]) {
@@ -55,7 +60,7 @@ export class store<T extends Object> implements Writable<T> {
 				return true;
 			},
 			get: (object, key, proxy) => {
-				if (key == "subscribe" || key == "update" || key == "set") return object[key];
+				if (key == "subscribe" || key == "update" || key == "set" || key == "toJSON" || key == "value") return object[key];
 				let value = object.state[key];
 				if (typeof value == "object" && !value[InnerSymbol]) {
 					// object.state[key] = inner(value, this);
