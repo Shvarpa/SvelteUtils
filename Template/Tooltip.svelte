@@ -1,5 +1,5 @@
 <script>
-	import { fly } from "svelte/transition"
+	import { fly } from "svelte/transition";
 	export let tip;
 	export let active = false;
 	export let delay = 500;
@@ -18,20 +18,47 @@
 	};
 	const hide = () => {
 		if (hideable) active = false;
-   };   
+	};
+	export let width = "100%";
 </script>
 
-<div on:mouseenter="{enter}" on:mouseleave="{leave}">
+<div class="tooltip-wrapper" on:mouseenter="{enter}" on:mouseleave="{leave}">
 	<slot />
 	{#if active && tip != undefined}
-		<div transition:fly={{y:-10,duration:200}} class="{`tooltip ${$$restProps.class ? $$restProps.class : ''}`}">{tip}</div>
+		<div transition:fly="{{ y: -10, duration: 200 }}" class="{`tooltip ${$$props.class || ''}`}" style="{`width: ${width};`}">{tip}</div>
 	{/if}
 </div>
 
 <style>
+	.tooltip-wrapper {
+		position: relative;
+		display: inline-block;
+	}
 	.tooltip {
 		position: absolute;
-		/* padding: 8px 16px; */
-		right: 10px;
+		padding: 8px 16px;
+		z-index: 50;
+		min-width: fit-content;
+	}
+
+	.bottom,
+	.top {
+		left: 0%;
+	}
+	.top {
+		bottom: calc(100% + 5px);
+	}
+	.bottom {
+		top: calc(100% + 5px);
+	}
+	.right,
+	.left {
+		top: -30%;
+	}
+	.left {
+		right: calc(100% + 10px);
+	}
+	.right {
+		left: calc(100% + 10px);
 	}
 </style>
