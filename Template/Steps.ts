@@ -12,7 +12,8 @@ interface Methods {
 }
 
 export const Steps = (levels: number, def?: number): Readable<Level> & Methods => {
-	let state = Store({ level: def ?? 0 });
+	let level = !def || def < 0 || levels <= def ? 0 : def;
+	let state = Store({ level });
 
 	const increase = () => {
 		state.level = Math.min(state.level + 1, levels);
@@ -28,3 +29,5 @@ export const Steps = (levels: number, def?: number): Readable<Level> & Methods =
 		decrease
 	};
 };
+
+export default Steps;

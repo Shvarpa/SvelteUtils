@@ -4,7 +4,7 @@
 	export let stopLabel = "Stop";
 	export let active = false;
 
-	let state = Toggleable(active);
+	let toggleable = Toggleable(active);
 </script>
 
-<button on:start on:stop {...$$restProps} class="{`button ${$$props.class || ''}`}" on:click="{state.toggle}">{active ? stopLabel : startLabel}</button>
+<button on:start on:stop {...$$restProps} class="{`button ${$$props.class || ''}`}" on:click="{toggleable.toggle}">{active ? stopLabel : startLabel}</button>
