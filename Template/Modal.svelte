@@ -7,6 +7,9 @@
 		isActive = false;
 		dispatch("close");
 	};
+	const outside = () => {
+		dispatch("outside",close)
+	}
 	const handleKey = event => {
 		if (event.code == "Escape") close();
 	};
@@ -15,7 +18,7 @@
 <svelte:window on:keydown="{handleKey}" />
 
 <div class="modal" class:is-active="{isActive}">
-	<div class="modal-background" on:click="{close}"></div>
+	<div class="modal-background" on:click="{outside}"></div>
 	<div class="modal-content notification">
 		<button class="delete" on:click="{close}"></button>
 		<slot {close} />
