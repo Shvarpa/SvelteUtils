@@ -32,41 +32,33 @@ function inner<K extends Object, T extends Object>(state: K, root: store<T>) {
 }
 
 export class store<T extends Object> implements Writable<T>, Value<T> {
-	private state: T;
+	private _value: T;
 	private store: Writable<T>;
-	readonly value: T;
-	constructor(state: T) {
-		this.state = state;
-		this.store = writable(state);
-		this.value = state;
+	constructor(value: T) {
+		this.store = writable((this._value = value));
 		return new Proxy(this, {
 			set: (object, key, value, proxy) => {
-				// if(typeof value == "object" && !value[InnerSymbol]) {
-				// 	value = new inner(value,this);
-				// }
-				object.state[key] = value;
-				object.update(state => {
-					state[key] = value;
-					return state;
+				this.update(store => {
+					store[key] = value;
+					return store;
 				});
 				return true;
 			},
 			deleteProperty: (object, key) => {
-				delete object.state[key];
-				object.update(state => {
-					delete state[key];
-					return state;
+				this.update(store => {
+					delete store[key];
+					return store;
 				});
 				return true;
 			},
 			get: (object, key, proxy) => {
-				if (key == "subscribe" || key == "update" || key == "set" || key == "toJSON" || key == "value") return object[key];
-				let value = object.state[key];
+				if (key == "subscribe" || key == "update" || key == "set" || key == "toJSON" || key == "value") return this[key];
+				let value = this._value[key];
 				if (typeof value == "object" && !value[InnerSymbol]) {
 					// object.state[key] = inner(value, this);
 					return inner(value, this);
 				}
-				return object.state[key];
+				return this.value[key];
 			}
 		});
 	}
@@ -75,20 +67,29 @@ export class store<T extends Object> implements Writable<T>, Value<T> {
 		return this.store.subscribe;
 	}
 
+	private _update = (updater: (x: T) => T): void => {
+		this.store.update(value => (this._value = updater(value)));
+	};
 	get update() {
-		return this.store.update;
+		return this._update;
 	}
 
+	private _set = (value: T) => {
+		this.store.set((this._value = value));
+	};
 	get set() {
-		return (value: T) => {
-			this.state = value;
-			this.store.set(value);
-		}
+		return this._set;
 	}
+
+	get value() {
+		return this._value;
+	}
+
+	// set value(value) { this.set(value); }
 
 	toJSON() {
 		return {
-			...this.state
+			...this.value
 		};
 	}
 }

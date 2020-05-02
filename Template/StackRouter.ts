@@ -9,7 +9,7 @@ interface ComponentRoute {
 }
 
 type Route = ComponentRoute | SvelteComponent;
-const isSvelteComponent = (route: Route): route is SvelteComponent => typeof route == "function";
+const isSvelteComponent = (route: Route): route is SvelteComponent => typeof route == "function" || (typeof route == "object" && (route as any).render);
 
 interface StackRouterStore extends ComponentRoute {
 	depth: number;
@@ -35,18 +35,20 @@ export class StackRouter implements Readable<StackRouterStore> {
 				props: { get: () => this.state.props }
 			}
 		);
-		if (route == undefined) return;
-		this.go(route);
-		this.min = 1;
+		if (route != undefined) {
+			this.go(route);
+			this.min = 1;
+		}
 	}
 
 	private update() {
 		let depth = this.stack.length;
-		this.state.set({ ...this.stack[depth - 1], depth });
+		let item = this.stack[depth - 1] || { component: undefined, props: {} };
+		this.state.set({ ...item, depth });
 	}
 
 	clear() {
-		this.stack.splice(this.min)
+		this.stack.splice(this.min);
 		this.update();
 	}
 

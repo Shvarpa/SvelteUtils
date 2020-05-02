@@ -7,4 +7,4 @@
    export let router = new StackRouter();   
 </script>
 
-<svelte:component this={$router.component} {...$router.props} />
+<svelte:component this={$router.component} {...($router.props || {})} />
