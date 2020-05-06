@@ -8,8 +8,8 @@
 		dispatch("close");
 	};
 	const outside = () => {
-		dispatch("outside",close)
-	}
+		dispatch("outside", close);
+	};
 	const handleKey = event => {
 		if (event.code == "Escape") close();
 	};
@@ -28,5 +28,22 @@
 <style>
 	.modal-content {
 		overflow: visible;
+	}
+
+	@media screen and (min-width: 769px) {
+		.modal-content {
+			width: 80vw;
+		}
+	}
+
+	@media screen and (min-width: 1200px) {
+		.modal-content {
+			width: 1000px;
+		}
+	}
+
+	.modal-content {
+		overflow: auto;
+		position: relative;
 	}
 </style>

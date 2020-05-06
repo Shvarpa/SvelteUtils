@@ -10,24 +10,20 @@
 	export let srcObject;
 	export let isAudio = false;
 	const { autoplay, controls } = $$restProps;
-
 	export let mediaElement = undefined;
-
-	const toggle = () => {
-		if (document.fullscreen) {
-			document.exitFullscreen();
-			document.exitPointerLock();
-		} else if (mediaElement) {
-			mediaElement.requestFullscreen();
-			mediaElement.requestPointerLock();
-		}
-	};
 </script>
 
 {#if srcObject}
 	{#if isAudio}
 		<audio class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}"></audio>
+	{:else}
 		<video class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}"></video>
+	{/if}
+{:else}
+	{#if isAudio}
+		<audio class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps}></audio>
+	{:else}
+		<video class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps}></video>
 	{/if}
 {/if}
 
