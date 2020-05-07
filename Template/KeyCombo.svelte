@@ -1,3 +1,8 @@
+<script context="module">
+	import { getCode, keyCodes } from "./keys"
+	export { getCode, keyCodes };
+</script>
+
 <script>
 	import { createEventDispatcher } from "svelte";
 	const dispatch = createEventDispatcher();
