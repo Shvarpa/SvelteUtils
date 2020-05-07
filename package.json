@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"svelte": "src/index.js",
 	"module": "dist/index.mjs",
+	"type": "module",
 	"scripts": {
 		"dev": "concurrently \"rollup -c -w\" \"sirv dist --dev\"",
 		"test": "mocha --require ts-node/register tests/**/*.spec.ts --exit"
