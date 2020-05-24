@@ -9,21 +9,24 @@
 <script>
 	export let srcObject;
 	export let isAudio = false;
-	const { autoplay, controls } = $$restProps;
+	export let controls = false;
+
 	export let mediaElement = undefined;
+	let _controls = {};
+	$: _controls = controls ? { controls } : {};
 </script>
 
 {#if srcObject}
 	{#if isAudio}
-		<audio class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}"></audio>
+		<audio class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}" {..._controls}></audio>
 	{:else}
-		<video class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}"></video>
+		<video class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}" {..._controls}></video>
 	{/if}
 {:else}
 	{#if isAudio}
-		<audio class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps}></audio>
+		<audio class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} {..._controls}></audio>
 	{:else}
-		<video class="{`${!controls ? 'no-controls ' : ''}${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps}></video>
+		<video class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} {..._controls}></video>
 	{/if}
 {/if}
 
@@ -32,6 +35,6 @@
 		display: none;
 	}
 	.full {
-		height: 100%;
+		width: 100%;
 	}
 </style>
