@@ -5,6 +5,7 @@
 	export let duration = 3000;
 	export let position = "bottom";
 	export let text = "";
+	export let distance = 10;
 
 	let displayedText = text;
 	let stopTimeout;
@@ -34,19 +35,22 @@
 </script>
 
 {#if active}
-	<div transition:fly="{transition}" class="{`toast ${position} ${$$props.class || ''}`}">{displayedText}</div>
+	<div style={`--distance: ${distance}px`} transition:fly="{transition}" class="{`toast ${position} ${$$props.class || ''}`}">{displayedText}</div>
 {/if}
 
 <style>
 	.toast {
 		position: absolute;
+		z-index: 50;
 	}
 	.bottom {
-		bottom: 30px;
+		bottom: var(--distance);
 		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 	.top {
-		top: 30px;
+		top: var(--distance);
 		left: 50%;
+		transform: translate(-50%, -50%);
 	}
 </style>

@@ -1,6 +1,11 @@
 <script context="module">
-	import { getCode, keyCodes } from "./keys"
+	import { getCode, keyCodes } from "./keys";
 	export { getCode, keyCodes };
+	const relevent = (combo, ev) => {
+		let code = getCode(ev);
+		let key = ev.key;
+		return combo.includes(code) ? code : combo.includes(key) ? key : undefined;
+	};
 </script>
 
 <script>
@@ -9,7 +14,9 @@
 
 	export let time = 2000;
 	export let combo = ["Escape"];
-	if(typeof combo == "string") { combo = [combo]}
+	if (typeof combo == "string") {
+		combo = [combo];
+	}
 
 	let held = {};
 	let timeout;
@@ -33,22 +40,23 @@
 		sent = false;
 		cancel();
 	};
-	const detectKey = (ev) => combo.includes(ev.code) || combo.includes(ev.key)
 	const keydown = ev => {
-		if (detectKey(ev)) held[ev.code] = true;
+		let key = relevent(combo, ev);
+		if (!key) return;
+		held[key] = true;
 	};
 	const keyup = ev => {
-		if (detectKey(ev)) {
-			delete held[ev.code];
-			held = held;
-		}
+		let key = relevent(combo, ev);
+		if (!key) return;
+		delete held[key];
+		held = held;
 	};
-	const evalute = size => {
-		if (size != combo.length) clear();
+	const evalute = held => {
+		if (Object.keys(held).length != combo.length) clear();
 		else start();
 	};
 
-	$: evalute(Object.keys(held).length);
+	$: evalute(held);
 </script>
 
 <svelte:window on:keydown="{keydown}" on:keyup="{keyup}" />

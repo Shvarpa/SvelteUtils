@@ -26,10 +26,6 @@
 </div>
 
 <style>
-	.modal-content {
-		overflow: visible;
-	}
-
 	@media screen and (min-width: 769px) {
 		.modal-content {
 			width: 80vw;
@@ -43,7 +39,7 @@
 	}
 
 	.modal-content {
-		overflow: auto;
-		position: relative;
+		overflow: visible;
+		max-height: 100%;
 	}
 </style>
