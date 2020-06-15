@@ -10,8 +10,9 @@
 	let displayedText = text;
 	let stopTimeout;
 	let transition = {
-		y: position == "bottom" ? 30 : position == "top" ? -30 : 0,
-		duration: duration / 10
+		y: position == "bottom" ? distance : position == "top" ? -distance : 0,
+		x: position == "right" ? distance : position == "left" ? -distance : 0,
+		duration: duration > 0 ? duration / 10 : 50
 	};
 
 	let active = true;
@@ -22,20 +23,22 @@
 
 	const restart = () => {
 		active = true;
-		if (stopTimeout) clearTimeout(stopTimeout);
-		stopTimeout = setTimeout(stop, duration);
+		if (duration > 0) {
+			if (stopTimeout) clearTimeout(stopTimeout);
+			stopTimeout = setTimeout(stop, duration);
+		}
 	};
 
 	$: if (displayedText != text) {
 		displayedText = text;
-		restart();
+		if (duration > 0) restart();
 	}
 
 	onMount(restart);
 </script>
 
 {#if active}
-	<div style={`--distance: ${distance}px`} transition:fly="{transition}" class="{`toast ${position} ${$$props.class || ''}`}">{displayedText}</div>
+	<div style="{`--distance: ${distance}px`}" transition:fly="{transition}" class="{`toast ${position} ${$$props.class || ''}`}">{displayedText}</div>
 {/if}
 
 <style>
@@ -52,5 +55,15 @@
 		top: var(--distance);
 		left: 50%;
 		transform: translate(-50%, -50%);
+	}
+	.left {
+		left: var(--distance);
+		top: 50%;
+		transform: translate(0, -50%);
+	}
+	.right {
+		right: var(--distance);
+		top: 50%;
+		transform: translate(0, -50%);
 	}
 </style>
