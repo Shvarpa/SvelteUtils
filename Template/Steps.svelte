@@ -7,7 +7,7 @@
 		level = loop ? ((level + 1) % (levels)) : Math.min(level + 1, levels - 1);
 	};
 	const decrease = () => {
-		level = loop ? ((level - 1) % (levels)) : Math.max(level - 1, 0);
+		level = loop ? (level <= 0 ? levels - 1 : level - 1) : Math.max(level - 1, 0);		
 	};
 </script>
 
