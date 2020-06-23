@@ -34,7 +34,4 @@
 	.no-controls::-webkit-media-controls {
 		display: none;
 	}
-	.full {
-		width: 100%;
-	}
 </style>

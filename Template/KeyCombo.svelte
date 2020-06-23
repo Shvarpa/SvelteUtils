@@ -40,6 +40,10 @@
 		sent = false;
 		cancel();
 	};
+	const evalute = held => {
+		if (Object.keys(held).length != combo.length) clear();
+		else start();
+	};
 	const keydown = ev => {
 		let key = relevent(combo, ev);
 		if (!key) return;
@@ -51,12 +55,10 @@
 		delete held[key];
 		held = held;
 	};
-	const evalute = held => {
-		if (Object.keys(held).length != combo.length) clear();
-		else start();
-	};
-
+	const blur = ev => {
+		held = {};
+	}
 	$: evalute(held);
 </script>
 
-<svelte:window on:keydown="{keydown}" on:keyup="{keyup}" />
+<svelte:window on:keydown="{keydown}" on:keyup="{keyup}" on:blur="{blur}" />
