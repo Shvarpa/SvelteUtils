@@ -1,0 +1,9 @@
+/node_modules/
+/public/build/
+/dist/
+/example/
+/tests/
+.yarm.lock
+rollup.config.js
+.DS_Store
+tsconfig.json
