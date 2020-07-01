@@ -4,8 +4,8 @@
 
 <script>
 	export let height = "250px";
-	export let maxHeight;
-	export let minHeight;
+	export let maxHeight = undefined;
+	export let minHeight = undefined;
 	export let background = "white";
 	export let padding = "25px";
 

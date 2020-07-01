@@ -1,74 +1,56 @@
-// const padsAll = ["padding-top", "padding-bottom", "margin-top", "margin-bottom"];
-const pads = ["padding-top", "margin-top"];
-// const pads = ["margin-top", "margin-bottom"];
-// const pads = [];
+const pads = ["margin-bottom", "margin-top"];
 
-const getBaseHeight = (node: HTMLElement) => node.offsetHeight;
+const getBaseHeight = (node: HTMLElement) => node.offsetHeight || 0;
 
 const getHeight = (node: HTMLElement) => {
 	let style = window.getComputedStyle(node);
-	return pads.map(key => parseInt(style.getPropertyValue(key))).reduce((prev, cur) => prev + cur, 0);
+	return getBaseHeight(node) + pads.map(key => parseInt(style.getPropertyValue(key))).reduce((prev, cur) => prev + cur, 0);
 };
 
-export const getTotalHeight = (node: HTMLElement) => {
-	let cords = Array.prototype.map.call(node.children, (child: HTMLElement) => [child, child.getBoundingClientRect().y]);
-	let last;
-	let relevent = cords.filter(([child, y]) => {
-		if (!last || last != y) {
-			last = y;
-			return true;
-		}
-	});
-	let num = Array.prototype.reduce.call(
-		// node.children,
-		relevent,
-		(p, [c]) => {
-			return p + getHeight(c) + getBaseHeight(c);
-		},
-		0
-	);
-	// console.log(num);
-	return num + getHeight(node);
+export const getAllChildren = (node: HTMLElement): HTMLElement[] => {
+	if (node.children.length <= 0) return [];
+	return Array.prototype.reduce.call(node.children, (prev, next) => prev.concat([next, ...getAllChildren(next)]), []);
 };
 
 export const getSize = (node: HTMLElement) => {
-	let min, max, minEl, maxEl;
-	let cords = Array.prototype.map.call(node.children, (child: HTMLElement) => [child, child.getBoundingClientRect().y]);
-	cords.forEach(([child, y]) => {
-		if (!min || y <= min) {
-			min = y;
-			minEl = child;
-		}
-		if (!max || y >= max) {
-			max = y;
-			maxEl = child;
-		}
-	});
-	let addition = 0;
-	if (maxEl) {
-		let style = window.getComputedStyle(maxEl);
-		addition = pads.map(key => parseInt(style.getPropertyValue(key))).reduce((prev, cur) => prev + cur, 0) + getBaseHeight(maxEl);
-	}
-	// console.log({ max, min });
-	return (max || 0) - (min || 0) + addition;
+	let children = getAllChildren(node);
+	let cords: [HTMLElement, number][] = children.map((child: HTMLElement) => [child, child.getBoundingClientRect().y]);
+	let min = cords.reduce((prev, [, y]) => Math.min(y, prev), cords.length > 0 ? cords[0][1] : 0);
+	let max = cords.reduce((prev, [node, y]) => Math.max(y - min + getHeight(node), prev), 0);
+	return max;
 };
 
 interface Params {
 	transition: string;
-	show: boolean;
+	show?: boolean;
 }
 
 export const height = (node: HTMLElement, params: Params) => {
-	const update = (params: Params) => {
-		// node.style.height = params.show || true ? getTotalHeight(node) + "px" : "0";
-		node.style.height = params.show || true ? getSize(node) + "px" : "0";
+	let show = false;
+	let transition = "2s ease";
+	const set = (params: Params) => {
+		show = params.show ?? false;
+		transition = params.transition ?? "2s ease 0s";
 	};
-	node.style.transition = `height ${params.transition || "2s ease"}`;
+	const refresh = () => {
+		node.style.height = getSize(node) + "px";
+		node.style.transition = `height ${transition}`;
+	};
+	const update = (params: Params) => {
+		set(params);
+		refresh();
+	};
+	const resize = () => {
+		if(show) refresh();
+	};
 	node.style.overflow = "hidden";
+	if (window) window.addEventListener("resize", resize);
 	update(params);
 	return {
 		update,
-		destroy: () => {}
+		destroy: () => {
+			if (window) window.removeEventListener("resize", resize);
+		}
 	};
 };
 
