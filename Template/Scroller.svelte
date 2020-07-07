@@ -1,22 +1,23 @@
 <script context="module">
 	// import { ScrollChecker } from "./ScrollChecker";
+	import { onMount } from "svelte";
 </script>
 
 <script>
-	export let height = "250px";
+	export let height = undefined;
 	export let maxHeight = undefined;
 	export let minHeight = undefined;
 	export let background = "white";
 	export let padding = "25px";
 
-	let top = false;
+	let top = true;
 	let bottom = false;
 
 	let style = "";
 	$: style = `
 		${height ? `--height: ${height}; ` : ""}
-		${maxHeight ? `--max-height: ${height}; ` : ""}
-		${minHeight ? `--min-height: ${height}; ` : ""}
+		${maxHeight ? `--max-height: ${maxHeight}; ` : ""}
+		${minHeight ? `--min-height: ${minHeight}; ` : ""}
 		${padding ? `--padding: ${padding};` : ""}
 		${background ? `--background: ${background}` : ""}
 	`;
@@ -27,6 +28,7 @@
 		top = scrollTop == 0;
 		bottom = scrollTop + clientHeight == scrollHeight;
 	};
+	onMount(checkScroll);
 </script>
 
 <div class="{`scroller-wrapper ${$$props.class || ''}`}" {style}>
