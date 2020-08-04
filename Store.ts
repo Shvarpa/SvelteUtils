@@ -1,15 +1,10 @@
 import { Writable, writable } from "svelte/store";
 
 export class IStore<T> implements Writable<T> {
-	private unsub: () => void;
 	private _value: T;
 	private _store: Writable<T> = writable<T>(undefined);
 	constructor(value?: T) {
-		this.unsub = this._store.subscribe(val => (this._value = val));
-		if (value) this.value = value;
-	}
-	destroy() {
-		this.unsub();
+		this.value = value || undefined;
 	}
 	set value(value) {
 		this.set(value);
@@ -22,12 +17,13 @@ export class IStore<T> implements Writable<T> {
 	}
 	change(changer: (x: T) => void) {
 		changer(this._value);
+		this.set(this._value);
 	}
 	update(updater: (value: T) => T) {
-		return this._store.update(updater);
+		return this.set(updater(this._value));
 	}
 	set(value: T) {
-		return this._store.set(value);
+		return this._store.set((this._value = value));
 	}
 }
 

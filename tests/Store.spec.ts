@@ -12,7 +12,6 @@ describe("Store", () => {
 			store.set(value);
 			res = await getValue(store);
 			assert.deepEqual(value, res);
-			store.destroy();
 		});
 		it("should return current value of writable", async () => {
 			let value = {};
@@ -118,7 +117,6 @@ describe("Store", () => {
 				res = await getValue(store);
 
 				assert.deepEqual(res, { a: 5 });
-				store.destroy();
 			});
 		});
 		describe("value", () => {
