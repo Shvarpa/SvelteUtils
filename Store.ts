@@ -1,101 +1,45 @@
-import { writable, Writable } from "svelte/store";
+import { Writable, writable } from "svelte/store";
 
-interface Value<T> {
-	readonly value: T;
-}
-
-const InnerSymbol = Symbol("inner");
-function inner<K extends Object, T extends Object>(state: K, root: store<T>) {
-	return new Proxy(state, {
-		set: (object, key, value, proxy) => {
-			object[key] = value;
-			root.update(s => s);
-			return true;
-		},
-		get: (object, key, proxy) => {
-			if (key === InnerSymbol) {
-				return true;
-			}
-			let value = object[key];
-			if (typeof value == "object" && !value[InnerSymbol]) {
-				// object[key] = inner(value, root);
-				return inner(value, root);
-			}
-			return object[key];
-		},
-		deleteProperty: (object, key) => {
-			delete object[key];
-			root.update(s => s);
-			return true;
-		}
-	});
-}
-
-export class store<T extends Object> implements Writable<T>, Value<T> {
+export class IStore<T> implements Writable<T> {
+	private unsub: () => void;
 	private _value: T;
-	private store: Writable<T>;
-	constructor(value: T) {
-		this.store = writable((this._value = value));
-		return new Proxy(this, {
-			set: (object, key, value, proxy) => {
-				this.update(store => {
-					store[key] = value;
-					return store;
-				});
-				return true;
-			},
-			deleteProperty: (object, key) => {
-				this.update(store => {
-					delete store[key];
-					return store;
-				});
-				return true;
-			},
-			get: (object, key, proxy) => {
-				if (key == "subscribe" || key == "update" || key == "set" || key == "toJSON" || key == "value") return this[key];
-				let value = this._value[key];
-				if (typeof value == "object" && !value[InnerSymbol]) {
-					// object.state[key] = inner(value, this);
-					return inner(value, this);
-				}
-				return this.value[key];
-			}
-		});
+	private _store: Writable<T> = writable<T>(undefined);
+	constructor(value?: T) {
+		this.unsub = this._store.subscribe(val => (this._value = val));
+		if (value) this.value = value;
 	}
-
-	get subscribe() {
-		return this.store.subscribe;
+	destroy() {
+		this.unsub();
 	}
-
-	private _update = (updater: (x: T) => T): void => {
-		this.store.update(value => (this._value = updater(value)));
-	};
-	get update() {
-		return this._update;
+	set value(value) {
+		this.set(value);
 	}
-
-	private _set = (value: T) => {
-		this.store.set((this._value = value));
-	};
-	get set() {
-		return this._set;
-	}
-
 	get value() {
 		return this._value;
 	}
-
-	// set value(value) { this.set(value); }
-
-	toJSON() {
-		return {
-			...this.value
-		};
+	get subscribe() {
+		return this._store.subscribe.bind(this._store);
+	}
+	change(changer: (x: T) => void) {
+		changer(this._value);
+	}
+	update(updater: (value: T) => T) {
+		return this._store.update(updater);
+	}
+	set(value: T) {
+		return this._store.set(value);
 	}
 }
 
-export function Store<T>(state: T) {
-	return new store(state) as store<T> & T;
-}
+export const Store = <T>(value: T) => new IStore(value);
 
-export default Store;
+export const getValue = async <T>(store: Writable<T>): Promise<T> => {
+	return new Promise(async res => {
+		let unsub = (): void => {
+			throw new Error("getValue failed");
+		};
+		let val: T = await new Promise(_res => (unsub = store.subscribe(val => _res(val))));
+		unsub();
+		res(val);
+	});
+};
