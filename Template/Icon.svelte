@@ -1,5 +1,5 @@
 <script>
-	export let style;
+	export let style = undefined;
 	export let data;
 	let d;
 	let viewBox = "";
@@ -7,7 +7,7 @@
 	$: d = data.icon[4];
 </script>
 
-<svg aria-hidden="true" class="{`fa-svelte ${$$props.class || ''}`}" {style} role="img" xmlns="http://www.w3.org/2000/svg" {viewBox}>
+<svg aria-hidden="true" class="{`fa-svelte ${$$props.class || ''}`}" style="{style || ''}" role="img" xmlns="http://www.w3.org/2000/svg" {viewBox}>
 	<path fill="currentColor" {d}></path>
 </svg>
 
