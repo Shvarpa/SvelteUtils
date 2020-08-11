@@ -1,13 +1,14 @@
 <script>
+	export let style;
 	export let data;
-	let path = [];
+	let d;
 	let viewBox = "";
 	$: viewBox = "0 0 " + data.icon[0] + " " + data.icon[1];
-	$: path = data.icon[4];
+	$: d = data.icon[4];
 </script>
 
-<svg aria-hidden="true" class="{`fa-svelte ${$$props.class || ''}`}" role="img" xmlns="http://www.w3.org/2000/svg" {viewBox}>
-	<path fill="currentColor" d="{path}"></path>
+<svg aria-hidden="true" class="{`fa-svelte ${$$props.class || ''}`}" {style} role="img" xmlns="http://www.w3.org/2000/svg" {viewBox}>
+	<path fill="currentColor" {d}></path>
 </svg>
 
 <style>

@@ -1,4 +1,4 @@
-import { Writable, writable } from "svelte/store";
+import { Writable, writable, Readable } from "svelte/store";
 
 export class IStore<T> implements Writable<T> {
 	private _value: T;
@@ -27,7 +27,7 @@ export class IStore<T> implements Writable<T> {
 	}
 }
 
-export const Store = <T>(value: T) => new IStore(value);
+export const Store = <T>(value?: T) => new IStore(value);
 
 export const getValue = async <T>(store: Writable<T>): Promise<T> => {
 	return new Promise(async res => {
@@ -38,4 +38,14 @@ export const getValue = async <T>(store: Writable<T>): Promise<T> => {
 		unsub();
 		res(val);
 	});
+};
+
+export const until = async <T>(store: Readable<T>, callback: (value: T) => boolean) => {
+	let unsub;
+	await new Promise(res => {
+		unsub = store.subscribe(e => {
+			if (callback(e)) res();
+		});
+	});
+	unsub();
 };
