@@ -1,9 +1,19 @@
 <script context="module">
 	const srcObjectAction = (node, srcObject) => {
-		node.srcObject = srcObject;
+		const update = srcObject => {
+			if (srcObject) node.srcObject = srcObject;
+		};
+		update(srcObject);
+		return { update };
 	};
 	const mutedAction = (node, muted) => {
-		if (muted) node.volume = 0;
+		const update = muted => {
+			if (!muted) return;
+			node.muted = true;
+			node.volume = 0;
+		};
+		update(muted);
+		return { update };
 	};
 	export { srcObjectAction as srcObject };
 	import KeyCombo from "./KeyCombo.svelte";
@@ -15,22 +25,30 @@
 	export let controls = false;
 	export let muted = false;
 	export let mediaElement = undefined;
+
 	let _controls = {};
 	$: _controls = controls ? { controls } : {};
+
 </script>
 
-{#if srcObject}
-	{#if isAudio}
-		<audio class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}" {..._controls} use:mutedAction={muted}></audio>
-	{:else}
-		<video class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} use:srcObjectAction="{srcObject}" {..._controls} use:mutedAction={muted}></video>
-	{/if}
+{#if isAudio}
+	<audio
+		class:no-controls="{!controls}"
+		class="{`${$$restProps.class || ''}`}"
+		bind:this="{mediaElement}"
+		{...$$restProps}
+		{..._controls}
+		use:mutedAction="{muted}"
+		use:srcObjectAction="{srcObject}"></audio>
 {:else}
-	{#if isAudio}
-		<audio class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} {..._controls} use:mutedAction={muted}></audio>
-	{:else}
-		<video class:no-controls="{!controls}" class="{`${$$restProps.class || ''}`}" bind:this="{mediaElement}" {...$$restProps} {..._controls} use:mutedAction={muted}></video>
-	{/if}
+	<video
+		class:no-controls="{!controls}"
+		class="{`${$$restProps.class || ''}`}"
+		bind:this="{mediaElement}"
+		{...$$restProps}
+		{..._controls}
+		use:mutedAction="{muted}"
+		use:srcObjectAction="{srcObject}"></video>
 {/if}
 
 <style>

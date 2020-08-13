@@ -239,7 +239,7 @@ interface Window {
 }
 
 export const resize = (node: HTMLElement) => {
-	const dispatch = (type: string, detail?: any) => node.dispatchEvent(new CustomEvent(type, detail));
+	const dispatch = (type: string, detail?: any) => node.dispatchEvent(new CustomEvent(type, { detail }));
 	const observer = new ResizeObserver(entries => {
 		entries.forEach(entry => {
 			const { contentRect } = entry;
