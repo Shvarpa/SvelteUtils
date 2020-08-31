@@ -23,6 +23,7 @@ export const getSize = (node: HTMLElement) => {
 interface Params {
 	transition: string;
 	show?: boolean;
+	[key: string]: any;
 }
 
 export const height = (node: HTMLElement, params: Params) => {

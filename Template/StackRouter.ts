@@ -3,20 +3,21 @@ import { Store } from "../Store";
 import { Readable } from "svelte/store";
 import { SvelteComponent } from "svelte";
 
+type ISvelteComponent = SvelteComponent | any;
 interface ComponentRoute {
-	component: SvelteComponent;
+	component: ISvelteComponent;
 	props: { [key: string]: any };
 }
 
-type Route = ComponentRoute | SvelteComponent;
-const isSvelteComponent = (route: Route): route is SvelteComponent => typeof route == "function" || (typeof route == "object" && (route as any).render);
+type Route = ComponentRoute | ISvelteComponent;
+const isSvelteComponent = (route: Route): route is ISvelteComponent => typeof route == "function" || (typeof route == "object" && (route as any).render);
 
 interface StackRouterStore extends ComponentRoute {
 	depth: number;
 }
 
 export class StackRouter implements Readable<StackRouterStore> {
-	state = Store({
+	state = Store<StackRouterStore>({
 		component: undefined,
 		props: {},
 		depth: 0
@@ -31,12 +32,12 @@ export class StackRouter implements Readable<StackRouterStore> {
 		this.route = Object.defineProperties(
 			{},
 			{
-				component: { get: () => this.state.component },
-				props: { get: () => this.state.props }
+				component: { get: () => this.state.value.component },
+				props: { get: () => this.state.value.props }
 			}
 		);
 		if (route != undefined) {
-			this.go(route);
+			this._go(route);
 			this.min = 1;
 		}
 	}
@@ -52,17 +53,21 @@ export class StackRouter implements Readable<StackRouterStore> {
 		this.update();
 	}
 
-	back() {
+	back = () => {
 		if (this.stack.length == this.min) return false;
 		this.stack.pop();
+		this.update();
+		return true;
+	};
+
+	_go(to: Route) {
+		this.stack.push(isSvelteComponent(to) ? { component: to, props: {} } : to);
 		this.update();
 		return true;
 	}
 
 	go(to: Route) {
-		this.stack.push(isSvelteComponent(to) ? { component: to, props: {} } : to);
-		this.update();
-		return true;
+		return () => this._go(to);
 	}
 
 	get subscribe() {
