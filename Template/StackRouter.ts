@@ -48,10 +48,10 @@ export class StackRouter implements Readable<StackRouterStore> {
 		this.state.set({ ...item, depth });
 	}
 
-	clear() {
+	clear = () => {
 		this.stack.splice(this.min);
 		this.update();
-	}
+	};
 
 	back = () => {
 		if (this.stack.length == this.min) return false;
@@ -66,9 +66,7 @@ export class StackRouter implements Readable<StackRouterStore> {
 		return true;
 	}
 
-	go(to: Route) {
-		return () => this._go(to);
-	}
+	go = (to: Route) => () => this._go(to);
 
 	get subscribe() {
 		return this.state.subscribe;
