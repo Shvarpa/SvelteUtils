@@ -1,6 +1,6 @@
 {
 	"name": "svelte-utils",
-	"version": "1.0.0",
+	"version": "1.2.0",
 	"type": "module",
 	"scripts": {
 		"dev": "concurrently \"rollup -c -w\" \"sirv dist --dev\"",
@@ -26,6 +26,7 @@
 	"private": false,
 	"files": [
 		"Template",
-		"Store"
+		"Store",
+		"Actions"
 	]
 }
