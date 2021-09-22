@@ -4,10 +4,10 @@
 
 	export let duration = 3000;
 	export let position = "bottom";
-	export let text = "";
+	export let text = undefined;
 	export let distance = 10;
 
-	let displayedText = text;
+	let displayedText;
 	let stopTimeout;
 	let transition = {
 		y: position == "bottom" ? distance : position == "top" ? -distance : 0,
@@ -15,29 +15,41 @@
 		duration: duration > 0 ? duration / 10 : 50
 	};
 
-	let active = true;
+	export let active = true;
 
-	const stop = () => {
+	const _stop = () => {
 		active = false;
 	};
 
-	const restart = () => {
+	export const stop = () => {
+		_stop();
+		if (stopTimeout) clearTimeout(stopTimeout);
+	};
+
+	export const restart = () => {
 		active = true;
 		if (duration > 0) {
 			if (stopTimeout) clearTimeout(stopTimeout);
-			stopTimeout = setTimeout(stop, duration);
+			stopTimeout = setTimeout(_stop, duration);
 		}
 	};
 
-	$: if (displayedText != text) {
-		displayedText = text;
-		if (duration > 0) restart();
+	export const update = text => {
+		if (text == undefined || text == "") stop();
+		else {
+			displayedText = text;
+			if (duration > 0) restart();
+		}
+	};
+
+	$: if (text !== undefined && displayedText != text) {
+		update(text);
 	}
 
 	onMount(restart);
 </script>
 
-{#if active}
+{#if active && displayedText}
 	<div style="{`--distance: ${distance}px`}" transition:fly="{transition}" class="{`toast ${position} ${$$props.class || ''}`}">{displayedText}</div>
 {/if}
 
