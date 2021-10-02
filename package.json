@@ -34,7 +34,9 @@
 	],
 	"private": false,
 	"files": [
-		"src",
+		"Actions",
+		"Template",
+		"Store.ts",
 		"dist"
 	],
 	"exports": {
