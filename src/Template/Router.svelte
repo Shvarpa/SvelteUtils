@@ -1,5 +1,5 @@
 <script context="module">
-	import { Router } from "./ts/Router";
+	import { Router } from "./Router";
 	export const getBasepath = () => window.location.href.match(/(?<protocol>.*):\/\/(?<site>[^/]*)(?<path>\/[^.]*)(?<type>[^./]*.[^./]*)?/).groups.path;
 	export { Router };
 </script>

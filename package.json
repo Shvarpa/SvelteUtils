@@ -9,6 +9,11 @@
 		"test": "mocha --require ts-node/register tests/**/*.spec.ts --recursive --exit"
 	},
 	"devDependencies": {
+		"@babel/plugin-proposal-class-properties": "^7.14.5",
+		"@babel/plugin-proposal-object-rest-spread": "^7.15.6",
+		"@babel/preset-env": "^7.15.6",
+		"@babel/preset-typescript": "^7.15.0",
+		"@rollup/plugin-babel": "^5.3.0",
 		"@rollup/plugin-commonjs": "^11.1.0",
 		"@rollup/plugin-node-resolve": "^7.1.3",
 		"@rollup/plugin-typescript": "^8.2.5",
@@ -20,6 +25,7 @@
 		"rollup-plugin-svelte": "^5.2.1",
 		"sirv-cli": "^0.4.5",
 		"svelte": "^3.24.0",
+		"svelte-preprocess": "^4.9.8",
 		"ts-node": "^8.10.1",
 		"typescript": "^3.8.3"
 	},
@@ -30,5 +36,28 @@
 	"files": [
 		"src",
 		"dist"
-	]
+	],
+	"exports": {
+		"./Store": "./src/Store",
+		"./Actions/height": "./src/Actions/height",
+		"./Actions/resize": "./src/Actions/resize",
+		"./Template/Icon": "./src/Template/Icon",
+		"./Template/IconStack": "./src/Template/IconStack",
+		"./Template/KeyCombo": "./src/Template/KeyCombo",
+		"./Template/Modal": "./src/Template/Modal",
+		"./Template/Router": "./src/Template/Router",
+		"./Template/Scroller": "./src/Template/Scroller",
+		"./Template/Selectable": "./src/Template/Selectable",
+		"./Template/StackRouter": "./src/Template/StackRouter",
+		"./Template/Steps": "./src/Template/Steps",
+		"./Template/Stream": "./src/Template/Stream",
+		"./Template/TextShrink": "./src/Template/TextShrink",
+		"./Template/Toast": "./src/Template/Toast",
+		"./Template/Toggleable": "./src/Template/Toggleable",
+		"./Template/ToggleableButton": "./src/Template/ToggleableButton",
+		"./Template/Tooltip": "./src/Template/Tooltip",
+		"./Template/ts/Router": "./src/Template/ts/Router",
+		"./Template/ts/keys": "./src/Template/ts/keys",
+		"./Template/ts/StackRouter": "./src/Template/ts/StackRouter"
+	}
 }

@@ -1,4 +1,4 @@
-import { Store } from "../../Store";
+import { Store } from "../Store";
 
 export const filter = (path: string) => path.match(/(\/)?(.*)/)[2];
 const getPath = (path: string) => path.split("/").filter(Boolean);

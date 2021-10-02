@@ -1,4 +1,4 @@
-import { Store } from "../../Store";
+import { Store } from "../Store";
 
 import { Readable } from "svelte/store";
 import { SvelteComponent } from "svelte";
