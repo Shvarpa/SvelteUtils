@@ -44,7 +44,7 @@ export const until = async <T>(store: Readable<T>, callback: (value: T) => boole
 	let unsub;
 	await new Promise(res => {
 		unsub = store.subscribe(e => {
-			if (callback(e)) res();
+			if (callback(e)) res(true);
 		});
 	});
 	unsub();
