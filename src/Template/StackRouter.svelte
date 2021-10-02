@@ -1,5 +1,5 @@
 <script context="module">
-   import { StackRouter } from "./StackRouter"
+   import { StackRouter } from "./ts/StackRouter"
    export { StackRouter };
 </script>
 

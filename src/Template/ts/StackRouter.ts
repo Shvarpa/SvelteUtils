@@ -1,4 +1,4 @@
-import { Store } from "../Store";
+import { Store } from "../../Store";
 
 import { Readable } from "svelte/store";
 import { SvelteComponent } from "svelte";
@@ -35,7 +35,7 @@ export class StackRouter implements Readable<StackRouterStore> {
 				component: { get: () => this.state.value.component },
 				props: { get: () => this.state.value.props }
 			}
-		);
+		) as ComponentRoute;
 		if (route != undefined) {
 			this._go(route);
 			this.min = 1;

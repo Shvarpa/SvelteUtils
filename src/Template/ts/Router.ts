@@ -1,4 +1,4 @@
-import { Store } from "../Store";
+import { Store } from "../../Store";
 
 export const filter = (path: string) => path.match(/(\/)?(.*)/)[2];
 const getPath = (path: string) => path.split("/").filter(Boolean);
@@ -52,7 +52,7 @@ export class Router {
 	});
 
 	routes: Routes;
-   
+
 	constructor(routes: { [path: string]: any }) {
 		this.routes = routes.map(([path, component]) => {
 			return { path, component };
@@ -64,8 +64,8 @@ export class Router {
 	}
 
 	navigate(to) {
-		if (to == this.state.url) return;
-		this.state.url = combine(this.state.url, to);
+		if (to == this.state.value.url) return;
+		this.state.change(state => (state.url = combine(state.url, to)));
 	}
 
 	get subscribe() {

@@ -1,5 +1,5 @@
 <script context="module">
-	import { getCode, keyCodes } from "./keys";
+	import { getCode, keyCodes } from "./ts/keys";
 	export { getCode, keyCodes };
 	const relevent = (combo, ev) => {
 		let code = getCode(ev);

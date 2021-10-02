@@ -1,5 +1,5 @@
 import assert from "assert";
-import { Store, IStore, getValue } from "../Store";
+import { Store, IStore, getValue } from "../src/Store";
 import { writable } from "svelte/store";
 describe("Store", () => {
 	describe("getValue", () => {
