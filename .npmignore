@@ -1,9 +1,0 @@
-/node_modules/
-/public/build/
-/example/
-/tests/
-.yarm.lock
-rollup.config.js
-.DS_Store
-tsconfig.json
-prettier.config.js
