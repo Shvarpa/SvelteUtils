@@ -58,8 +58,8 @@
 		"./Template/Toggleable": "./Template/Toggleable.svelte",
 		"./Template/ToggleableButton": "./Template/ToggleableButton.svelte",
 		"./Template/Tooltip": "./Template/Tooltip.svelte",
-		"./Template/_Router": "./Template/ts/Router.ts",
-		"./Template/_keys": "./Template/ts/keys.ts",
-		"./Template/_StackRouter": "./Template/ts/StackRouter.ts"
+		"./Template/ts/Router": "./Template/ts/Router.ts",
+		"./Template/ts/keys": "./Template/ts/keys.ts",
+		"./Template/ts/StackRouter": "./Template/ts/StackRouter.ts"
 	}
 }
